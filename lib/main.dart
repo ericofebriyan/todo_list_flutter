@@ -28,12 +28,6 @@ class TodoListApp extends StatelessWidget {
             fontSize: 18,
           ),
         ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ButtonStyle(
-            backgroundColor: MaterialStatePropertyAll(Colors.teal),
-            foregroundColor: MaterialStatePropertyAll(Colors.white),
-          ),
-        ),
       ),
       home: const TodoHomePage(),
     );
