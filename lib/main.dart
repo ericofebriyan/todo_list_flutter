@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import 'second_page.dart';
 
 void main() {
   runApp(const TodoListApp());
@@ -97,7 +98,6 @@ class _TodoHomePageState extends State<TodoHomePage> {
     _saveTodos();
   }
 
-  //  DITAMBAHKAN: fungsi search + alert kalau tidak ditemukan
   void _searchTodo() {
     final query = _searchController.text.toLowerCase();
     final results =
@@ -112,7 +112,6 @@ class _TodoHomePageState extends State<TodoHomePage> {
     }
   }
 
-  //  DITAMBAHKAN: fungsi alert dialog
   void _showNoResultDialog() {
     showDialog(
       context: context,
@@ -129,6 +128,8 @@ class _TodoHomePageState extends State<TodoHomePage> {
     );
   }
 
+  int _currentIndex = 0; // ✅ untuk mengatur index navbar
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -139,7 +140,6 @@ class _TodoHomePageState extends State<TodoHomePage> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            //  Tambah search bar + tombol cari
             Row(
               children: [
                 Expanded(
@@ -197,6 +197,31 @@ class _TodoHomePageState extends State<TodoHomePage> {
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+
+          if (index == 1) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const SecondPage()),
+            );
+          }
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.list),
+            label: 'Daftar Tugas',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.navigate_next),
+            label: 'Halaman Kedua',
+          ),
+        ],
       ),
     );
   }
