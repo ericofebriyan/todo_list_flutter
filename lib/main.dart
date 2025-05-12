@@ -3,7 +3,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'second_page.dart';
 
-void main() {
+// Tambahan: ValueNotifier untuk ThemeMode
+final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.system);
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final prefs = await SharedPreferences.getInstance();
+  final isDark = prefs.getBool('isDarkMode') ?? false;
+  themeNotifier.value = isDark ? ThemeMode.dark : ThemeMode.light;
+
   runApp(const TodoListApp());
 }
 
@@ -12,24 +20,49 @@ class TodoListApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Todo List',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
-        useMaterial3: true,
-        textTheme: const TextTheme(
-          titleLarge: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-            color: Colors.teal,
+    return ValueListenableBuilder<ThemeMode>(
+      valueListenable: themeNotifier,
+      builder: (context, mode, _) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Todo List',
+          themeMode: mode,
+          theme: ThemeData(
+            brightness: Brightness.light,
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
+            useMaterial3: true,
+            textTheme: const TextTheme(
+              titleLarge: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Colors.teal,
+              ),
+              bodyMedium: TextStyle(
+                fontSize: 18,
+              ),
+            ),
           ),
-          bodyMedium: TextStyle(
-            fontSize: 18,
+          darkTheme: ThemeData(
+            brightness: Brightness.dark,
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: Colors.teal,
+              brightness: Brightness.dark,
+            ),
+            useMaterial3: true,
+            textTheme: const TextTheme(
+              titleLarge: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Colors.tealAccent,
+              ),
+              bodyMedium: TextStyle(
+                fontSize: 18,
+              ),
+            ),
           ),
-        ),
-      ),
-      home: const TodoHomePage(),
+          home: const TodoHomePage(),
+        );
+      },
     );
   }
 }
@@ -129,6 +162,19 @@ class _TodoHomePageState extends State<TodoHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Daftar Tugas'),
+        actions: [
+          IconButton(
+            icon: Icon(themeNotifier.value == ThemeMode.dark
+                ? Icons.dark_mode
+                : Icons.light_mode),
+            onPressed: () async {
+              final prefs = await SharedPreferences.getInstance();
+              final isDark = themeNotifier.value == ThemeMode.dark;
+              themeNotifier.value = isDark ? ThemeMode.light : ThemeMode.dark;
+              await prefs.setBool('isDarkMode', !isDark);
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
