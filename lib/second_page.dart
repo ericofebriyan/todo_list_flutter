@@ -137,7 +137,7 @@ class _SecondPageState extends State<SecondPage> {
               ),
             const SizedBox(height: 16),
             SizedBox(
-              width: double.infinity, // ✅ bikin tombol full width
+              width: double.infinity,
               child: ElevatedButton(
                 onPressed: _addSchedule,
                 child: const Text('Tambah Jadwal'),

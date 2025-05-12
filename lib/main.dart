@@ -122,7 +122,7 @@ class _TodoHomePageState extends State<TodoHomePage> {
     );
   }
 
-  int _currentIndex = 0; // ✅ untuk mengatur index navbar
+  int _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -213,7 +213,7 @@ class _TodoHomePageState extends State<TodoHomePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.navigate_next),
-            label: 'Halaman Kedua',
+            label: 'jadwal harian ',
           ),
         ],
       ),
